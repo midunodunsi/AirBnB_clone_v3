@@ -16,6 +16,12 @@ def teardown(obj):
     """ closes the datatbase"""
     storage.close()
 
+@app.Error
+def nop():
+    """ """
+    value = {"error": "Not found"}
+    return jsonify(value)
+
 
 if __name__ == "__main__":
     """ Main Function """
