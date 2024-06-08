@@ -2,7 +2,7 @@
 """ Start Flask """
 
 from api.v1.views import app_views
-from flask import Flask
+from flask import Flask, make_response, jsonify
 from models import storage
 from os import getenv
 
@@ -16,11 +16,11 @@ def teardown(obj):
     """ closes the datatbase"""
     storage.close()
 
-@app.Error
-def nop():
-    """ """
-    value = {"error": "Not found"}
-    return jsonify(value)
+
+@app.errorhandler(404)
+def page_not_found(error):
+    """ handle Error 404 """
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
 if __name__ == "__main__":

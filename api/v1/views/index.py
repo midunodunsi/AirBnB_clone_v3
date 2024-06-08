@@ -22,10 +22,3 @@ def stats():
     for key in obj:
         dic[key] = storage.count(key)
     return jsonify(dic)
-
-
-@app_views.route('/nop')
-def nop():
-    """ """
-    value = {"error": "Not found"}
-    return jsonify(value)
