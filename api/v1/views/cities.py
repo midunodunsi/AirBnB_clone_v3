@@ -24,7 +24,8 @@ def get_cities(state_id):
 @app_views.route('/api/v1/cities/<city_id>', methods=['GET'])
 def get_city(city_id):
     """ Retrieves a City object """
-    cities = [obj.to_dict() for obj in storage.all("City").values() if state_id == obj.state_id]
+    cities = [obj.to_dict() for obj in storage.all("City").values()
+              if state_id == obj.state_id]
     if cities == []:
         abort(404)
     return jsonify(cities[0])
@@ -35,7 +36,7 @@ def delete_city(city_id):
     """ Deletes a City objec """
     cities = strorage.all("City").values()
     city_obj = [obj.dict() for obj in cities if obj.id == city_id]
-    
+
     if city_obj == []:
         abort(404)
 
@@ -54,7 +55,7 @@ def create_city(state_id):
         abort(400, 'NOT a JSON')
     if 'name' not in request.get_json:
         abort(400, 'Missing name')
-    states = [obj.to_dict() for obj in storage.all("State").values() 
+    states = [obj.to_dict() for obj in storage.all("State").values()
               if obj.id == state_id]
     if not states:
         abort(404)
