@@ -4,14 +4,14 @@ create amenities"
 """
 from flask import jsonify, abort, request
 from models.amenity import Amenity
-from mmodels import storage
+from models import storage
 from api.v1.views import app_views
 
 
 @app_views.route('/amenities', strict_slashes=False)
 def get_all_amenities():
     amenity_list = []
-    for key, vakue in storage.all(Amenity).items():
+    for key, value in storage.all(Amenity).items():
         amenity_list.append(value.to_dict())
     return jsonify(amenity_list)
 
@@ -36,7 +36,7 @@ def delete_amenity(amenity_id):
         return abort(404)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=["POST"], strict_slashes=False)
+@app_views.route('/amenities', methods=["POST"], strict_slashes=False)
 def create_amenity():
     if request.content_type != 'application/json':
         return abort(400, 'Not a JSON')
@@ -45,10 +45,10 @@ def create_amenity():
     data = request.get_json()
 
     if 'name' not in data:
-        return abort(400, 'Missing name'
+        return abort(400, 'Missing name')
 
     amenity = Amenity(**data)
-    amenity.save())
+    amenity.save()
     return jsonify(amenity.to_dict()), 200
 
 
@@ -65,7 +65,7 @@ def update_amenity(amenity_id):
         ignore_keys = ['id', 'created_at', 'updated_at']
         for key, value in data.items():
             if key not in ignore_keys:
-                setatrr(amenity, key, value)
+                setattr(amenity, key, value)
         amenity.save()
         return jsonify(amenity.to_dict()), 200
     else:
