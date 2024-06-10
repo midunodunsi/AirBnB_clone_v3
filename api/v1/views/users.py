@@ -13,9 +13,9 @@ def get_all_users():
         Retrieve all user objects
     '''
     user_list = []
-    users = storage.all('User').values()
+    users = storage.all(User).values()
     for value in users:
-        user_list.append = (value.to_dict())
+        user_list.append(value.to_dict())
     return jsonify(user_list)
 
 
@@ -60,10 +60,10 @@ def post_user():
 
     user = User(**new_user)
     user.save()
-    return (jsonify(user.to_dict()), 201)
+    return jsonify(user.to_dict()), 201
 
 
-@app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/users/<user_id>', methods=['PUT'])
 def put_user(user_id=None):
     '''
         Update a user object
@@ -73,8 +73,12 @@ def put_user(user_id=None):
         return abort(404)
     if not request.json:
         return abort(400, 'Not a JSON')
-    for key, value in request.get_json().items():
-        if key not in ['id', 'created_at', 'email', 'updated_at']:
-            setattr(obj_user, key, value)
-    obj_user.save()
-    return (jsonify(obj_user.to_dict()), 200)
+    try:
+        data = request.get_json()
+        for key, value in data.items():
+            if key not in ['id', 'created_at', 'email', 'updated_at']:
+                setattr(obj_user, key, value)
+        obj_user.save()
+        return (jsonify(obj_user.to_dict()), 200)
+    except Exception:
+        return abort(404)
