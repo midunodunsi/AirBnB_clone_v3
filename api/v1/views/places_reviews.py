@@ -3,6 +3,7 @@
 """
 from flask import jsonify, abort, request
 from models.review import Review
+from models.place import Place
 from models import storage
 from api.v1.views import app_views
 
@@ -15,3 +16,12 @@ def get_reviews(place_id):
     if place == []:
         return abort(404)
     return jsonify(place[0].reviews())
+
+
+@app_views.route('/api/v1/reviews/<review_id>', strict_slashes=False)
+def get_a_review(review_id):
+    review = storage.get(Review, review_id)
+    if review:
+        return jsonify(review.to_dict())
+    else:
+        return abort(404)
