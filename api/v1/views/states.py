@@ -10,7 +10,7 @@ from api.v1.views import app_views
 @app_views.route('/states', strict_slashes=False)
 def get_all_states():
     states = storage.all(State).values()
-    state_list = [stata.to.dict() for state in states]
+    state_list = [state.to.dict() for state in states]
     return jsonify(state_list)
 
 
@@ -19,7 +19,7 @@ def get_state(state_id):
     state = storage.get(State, state_id)
 
     if state:
-        return jsonify(state.to.dict())
+        return jsonify(state.to_dict())
     else:
         return abort(404)
 
@@ -38,13 +38,13 @@ def delete_states(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def create_state():
     if request.content_type != 'application/json':
-        return abort(404, 'Not a JSON')
+        return abort(400, 'Not a JSON')
     if not request.get_json():
         return abort(400, 'Not a JSON')
     kwargs = request.get_json()
 
     if 'name' not in kwargs:
-        abort(400, 'Misssing name')
+        abort(400, 'Missing name')
 
     state = State(**kwargs)
     state.save()
@@ -65,7 +65,7 @@ def update_state(state_id):
         for key, value in data.items():
             if key not in ignore_keys:
                 setattr(state, key, value)
-            state.save()
-            return jsonify(state,to_dict()), 200
-        else:
+        state.save()
+        return jsonify(state.to_dict()), 200
+    else:
             return abort(404)
