@@ -24,7 +24,8 @@ def get_state(state_id):
         return abort(404)
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_states(state_id):
     state = storage.get(State, state_id)
     if state:
@@ -68,4 +69,4 @@ def update_state(state_id):
         state.save()
         return jsonify(state.to_dict()), 200
     else:
-            return abort(404)
+        return abort(404)
