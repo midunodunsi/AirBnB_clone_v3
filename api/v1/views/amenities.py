@@ -25,7 +25,8 @@ def get_amenity(amenity_id):
         return abort(404)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=["DELETE"], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=["DELETE"],
+                 strict_slashes=False)
 def delete_amenity(amenity_id):
     amenity = storage.get(Amenity, amenity_id)
     if amenity:
@@ -49,10 +50,11 @@ def create_amenity():
 
     amenity = Amenity(**data)
     amenity.save()
-    return jsonify(amenity.to_dict()), 200
+    return jsonify(amenity.to_dict()), 201
 
 
-@app_views.route('/amenities/<amenity_id>', methods=["PUT"], strict_slashes=False)
+@app_views.route('/amenities/<amenity_id>', methods=["PUT"],
+                 strict_slashes=False)
 def update_amenity(amenity_id):
     if request.content_type != 'application/json':
         return abort(400, 'Not a JSON')
@@ -69,4 +71,4 @@ def update_amenity(amenity_id):
         amenity.save()
         return jsonify(amenity.to_dict()), 200
     else:
-        return abort(404) 
+        return abort(404)
