@@ -21,6 +21,7 @@ def get_reviews(place_id):
         return jsonify(obj)
         
     else:
+        return abort(404)
 
 
 @app_views.route('/api/v1/reviews/<review_id>', strict_slashes=False)
