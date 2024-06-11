@@ -4,11 +4,12 @@
 from flask import jsonify, abort, request
 from models.review import Review
 from models.place import Place
+from models.user import User
 from models import storage
 from api.v1.views import app_views
 
 
-@app_views.route('/places/<string:place_id>/reviews',
+@app_views.route('api/v1/places/<place_id>/reviews',
                  methods=['GET'], strict_slashes=False)
 def get_all_reviews(place_id):
     """ get reviews from a spcific place """
@@ -40,7 +41,8 @@ def delete_Review(review_id):
         return abort(404)
 
 
-@app_views.route('places/<place_id>/reviews', methods=["POST"], strict_slashes=False)
+@app_views.route('places/<place_id>/reviews', 
+                 methods=["POST"], strict_slashes=False)
 def post_review(place_id):
     if request.content_type != 'application/json':
         return abort(400, 'Not a JSON')
