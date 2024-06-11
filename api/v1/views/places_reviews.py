@@ -18,8 +18,8 @@ def get_reviews(place_id):
     review_save = storage.all("Review")
     for key, value in review_save.items():
         if value.place_id == str(place_id):
-            place.append(value.to_dict())
-    return jsonify(place)
+            obj.append(value.to_dict())
+    return jsonify(obj)
 
 
 @app_views.route('/api/v1/reviews/<review_id>', strict_slashes=False)
