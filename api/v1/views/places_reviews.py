@@ -11,13 +11,13 @@ from api.v1.views import app_views
 
 @app_views.route('/api/v1/places/<place_id>/reviews', strict_slashes=False)
 def get_reviews(place_id):
-    place = storage.get('Place', place_id)
+    place = storage.get(Place, place_id)
     if place is None:
         abort(404)
     obj = []
-    review_save = storage.all("Review")
+    review_save = storage.all(Review)
     for key, value in review_save.items():
-        if value.place_id == str(place_id):
+        if value.place_id == place_id:
             obj.append(value.to_dict())
     return jsonify(obj)
 
