@@ -9,7 +9,7 @@ from models import storage
 from api.v1.views import app_views
 
 
-@app_views.route('/api/v1/places/<place_id>/reviews', strict_slashes=False)
+@app_views.route('/places/<place_id>/reviews', strict_slashes=False)
 def get_reviews(place_id):
     place = storage.get(Place, place_id)
     if place:
@@ -24,7 +24,7 @@ def get_reviews(place_id):
         return abort(404)
 
 
-@app_views.route('/api/v1/reviews/<review_id>', strict_slashes=False)
+@app_views.route('reviews/<review_id>', strict_slashes=False)
 def get_a_review(review_id):
     review = storage.get(Review, review_id)
     if review:
@@ -33,7 +33,7 @@ def get_a_review(review_id):
         return abort(404)
 
 
-@app_views.route('/api/v1/reviews/<review_id>', methods=["DELETE"],
+@app_views.route('reviews/<review_id>', methods=["DELETE"],
                  strict_slashes=False)
 def delete_Review(review_id):
     amenity = storage.get(Review, review_id)
@@ -45,7 +45,7 @@ def delete_Review(review_id):
         return abort(404)
 
 
-@app_views.route('/api/v1/places/<place_id>/reviews', methods=["POST"], strict_slashes=False)
+@app_views.route('places/<place_id>/reviews', methods=["POST"], strict_slashes=False)
 def post_review(place_id):
     if request.content_type != 'application/json':
         return abort(400, 'Not a JSON')
