@@ -79,5 +79,5 @@ def update_place(place_id):
         
         place.save()
         return jsonify(place.to_dict()), 200
-        else:
-            return abort(404)
+    else:
+        return abort(404)
