@@ -8,18 +8,15 @@ from models import storage
 from api.v1.views import app_views
 
 
-@app_views.route('/places/<place_id>/reviews', strict_slashes=False)
-def get_reviews(place_id):
-    """ Retrieves the list of all Review objects of a Place """
-    place = storage.get('Place', place_id)
+@app_views.route('/places/<string:place_id>/reviews',
+                 methods=['GET'], strict_slashes=False)
+def get_all_reviews(place_id):
+    """ get reviews from a spcific place """
+    place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    obj = []
-    review_save = storage.all("Review")
-    for key, value in review_save.items():
-        if value.place_id == str(place_id):
-            place.append(value.to_dict())
-    return jsonify(place)
+    reviews = [obj.to_dict() for obj in place.reviews]
+    return jsonify(reviews)
 
 
 @app_views.route('reviews/<review_id>', strict_slashes=False)
