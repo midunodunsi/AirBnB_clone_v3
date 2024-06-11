@@ -9,7 +9,7 @@ from models import storage
 from api.v1.views import app_views
 
 
-@app_views.route('api/v1/places/<place_id>/reviews',
+@app_views.route('places/<place_id>/reviews',
                  methods=['GET'], strict_slashes=False)
 def get_all_reviews(place_id):
     """ get reviews from a spcific place """
@@ -41,31 +41,17 @@ def delete_Review(review_id):
         return abort(404)
 
 
-@app_views.route('places/<place_id>/reviews', 
+@app_views.route('places/<place_id>/reviews',
                  methods=["POST"], strict_slashes=False)
 def post_review(place_id):
-    if request.content_type != 'application/json':
-        return abort(400, 'Not a JSON')
+    """ updates by id """
     if not request.get_json():
-        return abort(400, 'Not a JSON')
-    data = request.get_json()
-
-    if 'user.id' not in data:
-        return abort(400, 'Missing user_id')
-    if 'text' not in data:
-        return abort(400, 'Missing text')
-
-    places = storage.all(Place).values()
-    place = [obj.to_dict() for obj in places if obj.id == place_id]
-    if place == []:
-        return abort(404)
-
-    Users = storage.all(User).values()
-    user_id = data['user.id']
-    user_list = [obj.to_dict() for obj in places if obj.id == user_id]
-    if user_list == []:
-        return abort(404)
-
-    review = Review(**data)
-    review.save()
-    return jsonify(review.to_dict()), 201
+        return make_response(jsonify({"error": "Not a JSON"}), 400)
+    obj = storage.get(Review, review_id)
+    if obj is None:
+        abort(404)
+    for key, value in request.get_json().items():
+        if key not in ['id', 'user_id', 'place_id', 'created_at', 'updated']:
+            setattr(obj, key, value)
+    storage.save()
+    return jsonify(obj.to_dict())
