@@ -4,24 +4,22 @@
 from flask import jsonify, abort, request
 from models.review import Review
 from models.place import Place
-from models.user import User
 from models import storage
 from api.v1.views import app_views
 
 
 @app_views.route('/places/<place_id>/reviews', strict_slashes=False)
 def get_reviews(place_id):
-    place = storage.get(Place, place_id)
-    if place:
-        obj = []
-        review_save = storage.all(Review)
-        for key, value in review_save.items():
-            if value.place_id == str(place_id):
-                obj.append(value.to_dict())
-        return jsonify(obj)
-        
-    else:
-        return abort(404)
+    """ Retrieves the list of all Review objects of a Place """
+    place = storage.get('Place', place_id)
+    if place is None:
+        abort(404)
+    obj = []
+    review_save = storage.all("Review")
+    for key, value in review_save.items():
+        if value.place_id == str(place_id):
+            place.append(value.to_dict())
+    return jsonify(place)
 
 
 @app_views.route('reviews/<review_id>', strict_slashes=False)
